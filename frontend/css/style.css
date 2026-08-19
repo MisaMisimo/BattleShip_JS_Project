@@ -13,6 +13,7 @@ body {
     background: linear-gradient(0deg, rgba(42, 123, 155, 1) 0%, rgba(87, 199, 188, 1) 52%, rgba(16, 29, 176, 1) 100%);
 }
 
+
 .css-center-div {
     /* background-color: aqua; */
     /* width: 100%; */
@@ -39,21 +40,22 @@ body {
 
 .css-board {
     /* min-width: 60vw; */
-    height: 80vh;
+    height: 75vh;
     aspect-ratio: 1;
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     gap: 10px;
-    background-color: white;
+    background-color: rgb(89, 100, 199);
+    padding: 10px;
 }
 
 .css-board button {
     box-sizing: border-box;
-    aspect-ratio: 1 /1;
     /* width: 100%; */
     cursor: pointer;
     background-color: rgb(50, 50, 50);
-    border-width: 5px;
+    border-width: 10px;
+    aspect-ratio: 1 /1;
 }
 
 .css-options-btn,
