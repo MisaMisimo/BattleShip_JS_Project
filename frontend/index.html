@@ -10,17 +10,23 @@
 
 <body>
     <div class="css-center-div">
-        <h1 class="css-title">battleShip</h1>
+        <h1 class="css-title">battleShip.js</h1>
     </div>
     <div class="css-center-div">
-        <div>
-            <div></div>
-            <div class="css-btn-matrix js-board"></div>
-            <div class="css-boat-display">
+        <div class="css-game-screen">
+            <div class="css-panel-left"></div>
+            <div class="css-board js-board"></div>
+            <div class="css-panel-right">
                 <p>Boats</p>
+                <ul>
+                    <li>Carrier (5 holes)</li>
+                    <li>Battleship (4 holes)</li>
+                    <li>Cruiser (3 holes)</li>
+                    <li>Submarine (3 holes)</li>
+                    <li>Destroyer (2 holes)</li>
+                </ul>
             </div>
         </div>
-
     </div>
     <div class="css-center-div">
         <button id="start-game-btn" class="css-start-game-btn">Start Game</button>

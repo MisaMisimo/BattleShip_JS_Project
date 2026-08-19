@@ -13,7 +13,7 @@ export class GameBoard {
         let htmlString = '';
         for (let i = 1; i <= this.boardWidth; i++) {
             for (let j = 1; j <= this.boardHeight; j++) {
-                htmlString += `<button data-row-index=${i} data-column-index=${j}>${charFromIndex(i)}${j}</button>`
+                htmlString += `<button data-row-index=${i} data-column-index=${j} disabled>${charFromIndex(i)}${j}</button>`
             }
         }
         // console.log(x)
