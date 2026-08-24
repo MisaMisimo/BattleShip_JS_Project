@@ -35,8 +35,11 @@ body {
 
 .css-panel-left,
 .css-panel-right {
-    width: 20vw
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
 }
+
 
 .css-board {
     /* min-width: 60vw; */
@@ -47,6 +50,18 @@ body {
     gap: 10px;
     background-color: rgb(89, 100, 199);
     padding: 10px;
+    display: none;
+}
+
+.css-start-menu {
+    /* min-width: 60vw; */
+    height: 75vh;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+
 }
 
 .css-board button {
@@ -56,9 +71,11 @@ body {
     background-color: rgb(50, 50, 50);
     border-width: 10px;
     aspect-ratio: 1 /1;
+    /* visibility: hidden; */
 }
 
 .css-options-btn,
+.css-end-game-btn,
 .css-start-game-btn {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -71,9 +88,11 @@ body {
     border-radius: 10px;
     border-width: 5px;
     cursor: pointer;
-
 }
 
+.css-end-game-btn {
+    display: none;
+}
 
 button:hover {
     border-color: yellow;
