@@ -11,7 +11,8 @@ export class GameEngine {
     }
     tileStates = {
         placed: "placed",
-        undefined: "undefined"
+        undefined: "undefined",
+        boat: "boat"
 
     }
     placedBoatStates = {
@@ -45,7 +46,11 @@ export class GameEngine {
             state: this.placedBoatStates.unplaced
         }
     ]
-
+    playerTileStates = {
+        none: "none",
+        boatPlaced: "boatPlaced",
+        selectionCandidate: "selectionCandidate"
+    }
 
     gameState = this.gameStates.startMenu
     allBoardTiles = document.querySelectorAll('.js-board-tile');
@@ -93,9 +98,17 @@ export class GameEngine {
                 boat.state = this.placedBoatStates.placed;
                 console.log(boat);
                 // update html dataset
+                // update highlights based on dataset
                 break;
             }
         }
+        this.allBoardTiles = document.querySelectorAll('.js-board-tile');
+        this.allBoardTiles.forEach((boardTile) => {
+            if (boardTile.dataset.playerTileState === this.playerTileStates.selectionCandidate) {
+                boardTile.dataset.playerTileState = this.playerTileStates.boatPlaced;
+                this.setTileState(boardTile, this.tileStates.boat);
+            }
+        });
     }
     highlightBoatDirection(mouseQuadrant, x_length, y_length) {
         // console.log(`mouseQuadrant:${mouseQuadrant}, x_length:${x_length}, y_length:${y_length}, rowIndex:${this.currentAnchor.rowIndex}, columnIndex:${this.currentAnchor.columnIndex}`);
@@ -110,43 +123,46 @@ export class GameEngine {
             let tileColumnIndex = Number(boardTile.dataset.columnIndex);
             let anchorRowIndex = this.currentAnchor.rowIndex;
             let anchorColumnIndex = this.currentAnchor.columnIndex;
-            if (mouseQuadrant === 0) {
-                if (
-                    tileRowIndex - y_length <= anchorRowIndex && anchorRowIndex <= tileRowIndex &&
-                    anchorColumnIndex === tileColumnIndex
-                ) {
-                    this.setTileState(boardTile, this.tileStates.placed);
-                } else {
-                    this.setTileState(boardTile, this.tileStates.undefined);
+            if (boardTile.dataset.playerTileState != this.playerTileStates.boatPlaced) {
+                if (mouseQuadrant === 0) {
+                    if (
+                        tileRowIndex - y_length <= anchorRowIndex && anchorRowIndex <= tileRowIndex &&
+                        anchorColumnIndex === tileColumnIndex
+                    ) {
+                        this.setTileState(boardTile, this.tileStates.placed);
+                    } else {
+                        this.setTileState(boardTile, this.tileStates.undefined);
+                    }
+                }
+                if (mouseQuadrant === 1) {
+                    if (anchorRowIndex === tileRowIndex &&
+                        tileColumnIndex <= anchorColumnIndex && anchorColumnIndex <= tileColumnIndex + x_length
+                    ) {
+                        this.setTileState(boardTile, this.tileStates.placed);
+                    } else {
+                        this.setTileState(boardTile, this.tileStates.undefined);
+                    }
+                }
+                if (mouseQuadrant === 2) {
+                    if (tileRowIndex <= anchorRowIndex && anchorRowIndex <= tileRowIndex + y_length &&
+                        anchorColumnIndex === tileColumnIndex
+                    ) {
+                        this.setTileState(boardTile, this.tileStates.placed);
+                    } else {
+                        this.setTileState(boardTile, this.tileStates.undefined);
+                    }
+                }
+                if (mouseQuadrant === 3) {
+                    if (anchorRowIndex === tileRowIndex &&
+                        tileColumnIndex - x_length <= anchorColumnIndex && anchorColumnIndex <= tileColumnIndex
+                    ) {
+                        this.setTileState(boardTile, this.tileStates.placed);
+                    } else {
+                        this.setTileState(boardTile, this.tileStates.undefined);
+                    }
                 }
             }
-            if (mouseQuadrant === 1) {
-                if (anchorRowIndex === tileRowIndex &&
-                    tileColumnIndex <= anchorColumnIndex && anchorColumnIndex <= tileColumnIndex + x_length
-                ) {
-                    this.setTileState(boardTile, this.tileStates.placed);
-                } else {
-                    this.setTileState(boardTile, this.tileStates.undefined);
-                }
-            }
-            if (mouseQuadrant === 2) {
-                if (tileRowIndex <= anchorRowIndex && anchorRowIndex <= tileRowIndex + y_length &&
-                    anchorColumnIndex === tileColumnIndex
-                ) {
-                    this.setTileState(boardTile, this.tileStates.placed);
-                } else {
-                    this.setTileState(boardTile, this.tileStates.undefined);
-                }
-            }
-            if (mouseQuadrant === 3) {
-                if (anchorRowIndex === tileRowIndex &&
-                    tileColumnIndex - x_length <= anchorColumnIndex && anchorColumnIndex <= tileColumnIndex
-                ) {
-                    this.setTileState(boardTile, this.tileStates.placed);
-                } else {
-                    this.setTileState(boardTile, this.tileStates.undefined);
-                }
-            }
+
         });
     }
     updateGameState(newGameState) {
@@ -168,7 +184,7 @@ export class GameEngine {
         // From anchorPlaced 
         if (this.gameStates.anchorPlaced === this.gameState) {
             if (this.gameStates.placingBoats === newGameState) {
-
+                this.gameState = newGameState;
             }
 
         }
@@ -209,6 +225,7 @@ export class GameEngine {
         else if (this.gameState === this.gameStates.anchorPlaced) {
             this.placeBoat(boardTile);
             this.updateGameState(this.gameStates.placingBoats);
+            this.anchorButton = undefined;
         }
         // console.log(boardTile.dataset);
         // console.log(boardTile.dataset.rowIndex);
@@ -219,11 +236,19 @@ export class GameEngine {
             boardTile.style.borderColor = "initial";
             boardTile.style.backgroundColor = "rgb(50, 50, 50)";
             boardTile.style.color = "bisque";
+            boardTile.dataset.playerTileState = this.playerTileStates.none;
         }
         else if (tileState === this.tileStates.placed) {
             boardTile.style.borderColor = "orange";
             boardTile.style.backgroundColor = "orange";
             boardTile.style.color = "black";
+            boardTile.dataset.playerTileState = this.playerTileStates.selectionCandidate;
+        }
+        else if (tileState === this.tileStates.boat) {
+            boardTile.style.borderColor = "blue";
+            boardTile.style.backgroundColor = "blue";
+            boardTile.style.color = "black";
+            boardTile.dataset.playerTileState = this.playerTileStates.boatPlaced;
         }
     }
     placeAnchor(boardTile) {
